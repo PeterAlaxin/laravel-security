@@ -109,14 +109,24 @@ class SecurityHeaders
             $allowedDomains
         );
 
+        $frameSrc = array_merge(
+            ["'self'"],
+            $allowedDomains
+        );
+
+        $connectSrc = array_merge(
+            ["'self'", "wss:"],
+            $allowedDomains
+        );
+
         $directives = [
             'default-src \'self\'',
             'script-src ' . implode(' ', $scriptSrc),
             'style-src ' . implode(' ', $styleSrc),
             'img-src \'self\' data: blob: https: http:',
             'font-src \'self\' data:',
-            'connect-src \'self\' wss:',
-            'frame-src \'self\'',
+            'connect-src ' . implode(' ', $connectSrc),
+            'frame-src ' . implode(' ', $frameSrc),
             'media-src \'self\' blob:',
             'object-src \'none\'',
             'base-uri \'self\'',

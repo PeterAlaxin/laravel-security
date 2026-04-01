@@ -65,6 +65,7 @@ SECURITY_LOG_CHANNEL=daily
 # Security Headers
 SECURITY_HEADERS_ENABLED=true
 SECURITY_CSP_ENABLED=true
+SECURITY_CSP_DOMAINS=cdn.example.com,fonts.googleapis.com
 SECURITY_HSTS_ENABLED=true
 
 # Error Logging
@@ -104,6 +105,30 @@ Route::middleware(['security.block-ip', 'security.headers'])->group(function () 
 #### Auto-registration
 
 Set `SECURITY_AUTO_MIDDLEWARE=true` in `.env` to automatically register all middleware globally.
+
+### CSP Allowed Domains
+
+Use the `SECURITY_CSP_DOMAINS` environment variable to add trusted external domains to the default Content Security Policy. Domains are applied to the `script-src`, `style-src`, `connect-src`, and `frame-src` directives:
+
+```env
+SECURITY_CSP_DOMAINS=cdn.example.com,fonts.googleapis.com
+```
+
+Alternatively, for full control over CSP directives, define them in `config/security.php`:
+
+```php
+'csp' => [
+    'enabled' => true,
+    'directives' => [
+        'default-src' => ["'self'"],
+        'script-src' => ["'self'", "cdn.example.com"],
+        'style-src' => ["'self'", "'unsafe-inline'"],
+        // ...
+    ],
+],
+```
+
+When `directives` is set, the custom configuration is used as-is and `allowed_domains` is ignored.
 
 ### Exception Handling
 
